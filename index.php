@@ -146,10 +146,10 @@ class Model{
        
     }
     //update 1 obj 
-    function update(){
+    function update($id){
 
         $arr_data=$this->convertjsontoarr();
-        if(!isset($arr_data['ten'])||!isset($arr_data['ngaysinh'])||!isset($arr_data['gioitinh'])||!isset($arr_data['ma']))
+        if(!isset($arr_data['ten'])||!isset($arr_data['ngaysinh'])||!isset($arr_data['gioitinh']))
         {
             echo json_encode(array('erro'=>'04','message'=>'json sai dinh dang mau!'));
             exit();
@@ -158,60 +158,137 @@ class Model{
 
             $Nhanvien=new Nhanvien();
             $Nhanvien->urlset($arr_data);
-            $sql="update nhanvien set ten='".$Nhanvien->getten()."',ngaysinh='".$Nhanvien->getngaysinh()."',gioitinh=".$Nhanvien->getgioitinh()." where ma=".$Nhanvien->getma()."";
-            echo $sql;
+            $sql="update nhanvien set ten='".$Nhanvien->getten()."',ngaysinh='".$Nhanvien->getngaysinh()."',gioitinh=".$Nhanvien->getgioitinh()." where ma=".$id."";
             $this->execdb($sql);
             echo json_encode(array('erro'=>'00','message'=>'update success !'));
         }
        
     }
     //delete 1 obj
-    function delete(){
+    function delete($id){
 
-        $arr_data=$this->convertjsontoarr();
-        if(!isset($arr_data['ten'])||!isset($arr_data['ngaysinh'])||!isset($arr_data['gioitinh'])||!isset($arr_data['ma']))
-        {
-            echo json_encode(array('erro'=>'04','message'=>'json sai dinh dang mau!'));
-            exit();    
-        }else
-        {  
+        // $arr_data=$this->convertjsontoarr();
+        // if(!isset($arr_data['ten'])||!isset($arr_data['ngaysinh'])||!isset($arr_data['gioitinh'])||!isset($arr_data['ma']))
+        // {
+            // echo json_encode(array('erro'=>'04','message'=>'json sai dinh dang mau!'));
+            // exit();    
+        // }else
+        // {  
             $Nhanvien=new Nhanvien();
-            $Nhanvien->urlset($arr_data);
-            $sql="delete from nhanvien  where ma=".$Nhanvien->getma()." and ten='".$Nhanvien->getten()."' and ngaysinh='".$Nhanvien->getngaysinh()."' and gioitinh=".$Nhanvien->getgioitinh()."";
+            $Nhanvien->setma($id);
+            $sql="delete from nhanvien  where ma=".$Nhanvien->getma();
             $this->execdb($sql);
             echo json_encode(array('erro'=>'00','message'=>'delete success !'));
             
-        }
+        // }
         
     }
 }
 ////////////////////////////
 
+
+//bo ky tu dau trong day
+
+
 if($_SERVER['REQUEST_METHOD']=="GET")
 {   
-        if(isset($_GET['name'])&&!empty($_GET['name']))
-        {
-        $obj=new Model();
-        $arrjsondata= json_encode($obj->show($_GET['name']));
-        echo $arrjsondata;
-        }
-        else{
-                echo json_encode(array('erro'=>'05','message'=>"khong co tham so name tren URL !"));
-        }
+    $arrstaff=array('nhanvien');
+    $path=$_SERVER['PHP_SELF'];
+    $arrpath=explode('/', $path);
+    if(in_array($arrpath[2],$arrstaff))
+    {
+          
+            if(isset($_GET['name'])&&!empty($_GET['name']))
+            {
+            $obj=new Model();
+            $arrjsondata= json_encode($obj->show($_GET['name']));
+            echo $arrjsondata;
+            }
+            else{
+                    echo json_encode(array('erro'=>'05','message'=>"khong co tham so name tren URL !"));
+            }
+    }else
+    {
+        echo json_encode(array('erro'=>'06','message'=>"khong co staff tren URL hoac staff khong ton tai !"));  
+    }
+
 }elseif($_SERVER['REQUEST_METHOD']=="POST")
 {
-    $obj=new Model();
-    $obj->create();
 
+    $arrstaff=array('nhanvien');
+    $path=$_SERVER['PHP_SELF'];
+    $arrpath=explode('/', $path);
+     if(in_array($arrpath[2],$arrstaff))
+    { 
+        $obj=new Model();
+        $obj->create();
+    }else
+    {
+        echo json_encode(array('erro'=>'06','message'=>"khong co staff tren URL hoac staff khong ton tai !"));  
+    }
+
+     
+    
 }elseif($_SERVER['REQUEST_METHOD']=="PUT")
 {
-    echo "PUT";
-    $obj=new Model();
-    $obj->update();
+    $arrstaff=array('nhanvien');
+    $path=$_SERVER['PHP_SELF'];
+    $arrpath=explode('/', $path);
+     if(in_array($arrpath[2],$arrstaff))
+    { 
+        if(!empty($arrpath[3]))
+        {
+            $check=1 + $arrpath[3];
+            if($check>1){
+
+            $obj=new Model();
+            $obj->update($arrpath[3]);
+
+            }else{
+               echo json_encode(array('erro'=>'07','message'=>"khong ton tai ma dang nay trong csdl !"));
+            }    
+           
+        }else
+        {
+            echo json_encode(array('erro'=>'06','message'=>"khong co ID tren URL  !"));
+        }
+    }else
+    {
+        echo json_encode(array('erro'=>'06','message'=>"khong co staff tren URL hoac staff khong ton tai !"));  
+    }
 
 }elseif($_SERVER['REQUEST_METHOD']=="DELETE")
 {
-    $obj=new Model();
-    $obj->delete();
+
+    $arrstaff=array('nhanvien');
+    $path=$_SERVER['PHP_SELF'];
+    $arrpath=explode('/', $path);
+     if(in_array($arrpath[2],$arrstaff))
+    { 
+        if(!empty($arrpath[3]))
+        {
+            
+            $check=1 + $arrpath[3];
+             if($check>1){
+
+                $obj=new Model();
+                $obj->delete($arrpath[3]);
+
+             }else{
+                echo json_encode(array('erro'=>'07','message'=>"khong ton tai ma dang nay trong csdl !"));
+             }    
+        }else
+        {
+            echo json_encode(array('erro'=>'06','message'=>"khong co ID tren URL  !"));
+        }
+    }else
+    {
+        echo json_encode(array('erro'=>'06','message'=>"khong co staff tren URL hoac staff khong ton tai !"));  
+    }
+
+   
+}
+else{
+    echo json_encode(array('erro'=>'07','message'=>"API erro khong do yeu cau !"));
 }
 ?>
