@@ -61,7 +61,6 @@ class Nhanvien
 
 
 
-
 ///////////////////////////////////////////////////////////////////
 class Model{
 
@@ -187,22 +186,22 @@ class Model{
 ////////////////////////////
 
 
-//bo ky tu dau trong day
 
 
-if($_SERVER['REQUEST_METHOD']=="GET")
+
+//su ly voi controller
+if($_SERVER['REQUEST_METHOD']=="GET")//da sua done!
 {   
-    $arrstaff=array('nhanvien');
-    $path=$_SERVER['PHP_SELF'];
-    $arrpath=explode('/', $path);
-    if(in_array($arrpath[2],$arrstaff))
-    {
-          
-            if(isset($_GET['name'])&&!empty($_GET['name']))
+    $path=$_SERVER['REQUEST_URI'];
+    $path=ltrim($path,"/");
+    $arrpath=explode('?', $path);
+    if($arrpath[0]=='nhanvien')
+    { 
+        if(isset($_GET['name'])&&!empty($_GET['name']))
             {
-            $obj=new Model();
-            $arrjsondata= json_encode($obj->show($_GET['name']));
-            echo $arrjsondata;
+                $obj=new Model();
+                $arrjsondata= json_encode($obj->show($_GET['name']));
+                echo $arrjsondata;
             }
             else{
                     echo json_encode(array('erro'=>'05','message'=>"khong co tham so name tren URL !"));
@@ -212,38 +211,32 @@ if($_SERVER['REQUEST_METHOD']=="GET")
         echo json_encode(array('erro'=>'06','message'=>"khong co staff tren URL hoac staff khong ton tai !"));  
     }
 
-}elseif($_SERVER['REQUEST_METHOD']=="POST")
+}elseif($_SERVER['REQUEST_METHOD']=="POST")//da sua done !
 {
-
-    $arrstaff=array('nhanvien');
-    $path=$_SERVER['PHP_SELF'];
-    $arrpath=explode('/', $path);
-     if(in_array($arrpath[2],$arrstaff))
+    $path=$_SERVER['REQUEST_URI'];
+     if(ltrim($path,"/")=='nhanvien')
     { 
         $obj=new Model();
-        $obj->create();
+        $obj->create();   
     }else
     {
         echo json_encode(array('erro'=>'06','message'=>"khong co staff tren URL hoac staff khong ton tai !"));  
     }
 
-     
-    
-}elseif($_SERVER['REQUEST_METHOD']=="PUT")
+}elseif($_SERVER['REQUEST_METHOD']=="PUT")//da sua done!
 {
-    $arrstaff=array('nhanvien');
-    $path=$_SERVER['PHP_SELF'];
-    $arrpath=explode('/', $path);
-     if(in_array($arrpath[2],$arrstaff))
+    $path=$_SERVER['REQUEST_URI'];
+    $path=ltrim($path,"/");
+    $arrpath=explode('/',$path);
+     if($arrpath[0]=='nhanvien')
     { 
-        if(!empty($arrpath[3]))
+        if(!empty($arrpath[1]))
         {
-            $check=1 + $arrpath[3];
-            if($check>1){
-
-            $obj=new Model();
-            $obj->update($arrpath[3]);
-
+            $check=1 + $arrpath[1];
+            if($check>1)
+            {
+                $obj=new Model();
+                $obj->update($arrpath[1]);
             }else{
                echo json_encode(array('erro'=>'07','message'=>"khong ton tai ma dang nay trong csdl !"));
             }    
@@ -257,22 +250,19 @@ if($_SERVER['REQUEST_METHOD']=="GET")
         echo json_encode(array('erro'=>'06','message'=>"khong co staff tren URL hoac staff khong ton tai !"));  
     }
 
-}elseif($_SERVER['REQUEST_METHOD']=="DELETE")
+}elseif($_SERVER['REQUEST_METHOD']=="DELETE")//da sua done!
 {
-
-    $arrstaff=array('nhanvien');
-    $path=$_SERVER['PHP_SELF'];
-    $arrpath=explode('/', $path);
-     if(in_array($arrpath[2],$arrstaff))
+    $path=$_SERVER['REQUEST_URI'];
+    $path=ltrim($path,"/");
+    $arrpath=explode('/',$path);
+     if($arrpath[0]=='nhanvien')
     { 
-        if(!empty($arrpath[3]))
-        {
-            
-            $check=1 + $arrpath[3];
+        if(!empty($arrpath[1]))
+        { 
+            $check=1 + $arrpath[1];
              if($check>1){
-
                 $obj=new Model();
-                $obj->delete($arrpath[3]);
+                $obj->delete($arrpath[1]);
 
              }else{
                 echo json_encode(array('erro'=>'07','message'=>"khong ton tai ma dang nay trong csdl !"));
@@ -284,11 +274,9 @@ if($_SERVER['REQUEST_METHOD']=="GET")
     }else
     {
         echo json_encode(array('erro'=>'06','message'=>"khong co staff tren URL hoac staff khong ton tai !"));  
-    }
-
-   
+    }   
 }
 else{
-    echo json_encode(array('erro'=>'07','message'=>"API erro khong do yeu cau !"));
+    echo json_encode(array('erro'=>'08','message'=>"API erro khong do yeu cau !"));
 }
 ?>
