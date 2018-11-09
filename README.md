@@ -3,6 +3,7 @@ demo_API
  v3: tinh chỉnh code/dung swith,loại bỏ code thừa, đặt lại tên function cho dễ hiểu/code lại khó hiểu hơn v2 :))/ có thể mở rộng thêm staff đơn giản.
 1: Tạo table nhanvien(ma,ten,gioitinh,ngaysinh).
 	- cho index.php vào thư mục làm việc.
+	-cho file .htacess vào cùng cấp với index.php
 2: Mở POSTMAN để test:
 	-get dữ liệu theo ten:GET localhost:8080/nhanvien?name={tencantim}.
 	-post dữ liệu để them mới 1 obj vào DB:POST localhost:8080/nhanvien->Body->Row->truyền dãy json theo định dạng sau:
