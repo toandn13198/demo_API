@@ -1,6 +1,6 @@
 # demo_API
 demo_API
- v3: tinh chỉnh code/dung swith,loại bỏ code thừa, đặt lại tên function cho dễ hiểu/code lại khó hiểu hơn v2 :)).
+ v3: tinh chỉnh code/dung swith,loại bỏ code thừa, đặt lại tên function cho dễ hiểu/code lại khó hiểu hơn v2 :))/ có thể mở rộng thêm staff đơn giản.
 1: Tạo table nhanvien(ma,ten,gioitinh,ngaysinh).
 	- cho index.php vào thư mục làm việc.
 2: Mở POSTMAN để test:
